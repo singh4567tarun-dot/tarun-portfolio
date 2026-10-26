@@ -1,598 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarun Pratap Singh — Portfolio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg-dark:#15171c;
-    --bg-dark-2:#1b1e25;
-    --panel-cream:#f2ede2;
-    --panel-cream-2:#eae4d5;
-    --ink:#221f1a;
-    --ink-soft:#54503f;
-    --accent-amber:#dfa435;
-    --accent-teal:#4fa492;
-    --line-dark:#31353d;
-    --muted-dark:#8b8f98;
-    --danger-soft:#c17a63;
-    --radius:3px;
-  }
-
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
-  }
-
-  body{
-    margin:0;
-    background:var(--bg-dark);
-    color:var(--panel-cream);
-    font-family:'IBM Plex Sans', sans-serif;
-    font-size:15px;
-    line-height:1.6;
-  }
-
-  a{color:inherit;}
-
-  /* ---------- Layout shell ---------- */
-  .shell{
-    display:flex;
-    min-height:100vh;
-  }
-
-  /* ---------- Sidebar ---------- */
-  .sidebar{
-    width:270px;
-    flex-shrink:0;
-    background:var(--bg-dark-2);
-    border-right:1px solid var(--line-dark);
-    position:sticky;
-    top:0;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    padding:0;
-  }
-
-  .sidebar-header{
-    padding:24px 20px 18px;
-    border-bottom:1px solid var(--line-dark);
-  }
-
-  .avatar{
-    width:46px;height:46px;border-radius:50%;
-    background:linear-gradient(155deg, var(--accent-amber), var(--accent-teal));
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Fraunces', serif;
-    font-weight:700;
-    font-size:17px;
-    color:var(--bg-dark);
-    margin-bottom:14px;
-  }
-
-  .sidebar-header .name{
-    font-family:'Fraunces', serif;
-    font-size:19px;
-    font-weight:600;
-    color:var(--panel-cream);
-    letter-spacing:0.2px;
-  }
-
-  .sidebar-header .role{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
-    color:var(--accent-teal);
-    margin-top:5px;
-  }
-
-  .tree{
-    padding:14px 10px;
-    flex:1;
-    overflow-y:auto;
-  }
-
-  .tree-root{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12.5px;
-    color:var(--muted-dark);
-    padding:4px 10px 10px;
-    letter-spacing:0.3px;
-  }
-
-  .file-item{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    padding:8px 12px 8px 24px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    color:var(--muted-dark);
-    cursor:pointer;
-    border-left:2px solid transparent;
-    border-radius:0 var(--radius) var(--radius) 0;
-    background:transparent;
-    text-decoration:none;
-    transition:background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .file-item .dot{
-    width:6px;height:6px;border-radius:50%;
-    flex-shrink:0;
-    background:var(--muted-dark);
-  }
-
-  .file-item:hover{
-    background:rgba(223,164,53,0.08);
-    color:var(--panel-cream);
-  }
-
-  .file-item.active{
-    background:rgba(223,164,53,0.13);
-    color:var(--accent-amber);
-    border-left-color:var(--accent-amber);
-  }
-  .file-item.active .dot{background:var(--accent-amber);}
-
-  .sidebar-footer{
-    padding:16px 20px 22px;
-    border-top:1px solid var(--line-dark);
-    display:flex;
-    gap:14px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-  }
-  .sidebar-footer a{
-    color:var(--muted-dark);
-    text-decoration:none;
-    transition:color 0.15s ease;
-  }
-  .sidebar-footer a:hover{color:var(--accent-teal);}
-
-  /* ---------- Mobile tab strip ---------- */
-  .mobile-tabs{
-    display:none;
-    position:sticky;
-    top:0;
-    z-index:20;
-    background:var(--bg-dark-2);
-    border-bottom:1px solid var(--line-dark);
-    overflow-x:auto;
-    white-space:nowrap;
-    padding:10px 10px;
-  }
-  .mobile-tabs a{
-    display:inline-block;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--muted-dark);
-    text-decoration:none;
-    padding:7px 12px;
-    margin-right:4px;
-    border-radius:var(--radius);
-  }
-  .mobile-tabs a.active{
-    color:var(--accent-amber);
-    background:rgba(223,164,53,0.12);
-  }
-
-  /* ---------- Main editor pane ---------- */
-  .main{
-    flex:1;
-    min-width:0;
-    background:
-      linear-gradient(var(--panel-cream-2) 1px, transparent 1px) 0 0/100% 34px,
-      var(--panel-cream);
-    color:var(--ink);
-  }
-
-  .tabbar{
-    position:sticky;
-    top:0;
-    background:var(--bg-dark);
-    border-bottom:1px solid var(--line-dark);
-    padding:0 24px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--muted-dark);
-    height:38px;
-    display:flex;
-    align-items:center;
-    z-index:10;
-  }
-  .tabbar .crumb-active{color:var(--accent-amber);}
-
-  section{
-    padding:70px 60px;
-    border-bottom:1px dashed #cfc7b2;
-    max-width:840px;
-  }
-  section:last-of-type{border-bottom:none;}
-
-  .section-label{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--accent-teal);
-    text-transform:none;
-    margin-bottom:10px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .section-label::before{
-    content:"";
-    width:16px;height:1px;background:var(--accent-teal);
-    display:inline-block;
-  }
-
-  h1.hero-name{
-    font-family:'Fraunces', serif;
-    font-weight:700;
-    font-size:clamp(34px, 5vw, 54px);
-    line-height:1.08;
-    margin:0 0 14px;
-    color:var(--ink);
-  }
-
-  h2.section-title{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:26px;
-    margin:0 0 22px;
-    color:var(--ink);
-  }
-
-  .terminal{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:14px;
-    background:var(--ink);
-    color:#e9e3d2;
-    border-radius:var(--radius);
-    padding:20px 22px;
-    margin:22px 0 8px;
-    line-height:1.75;
-  }
-  .terminal .prompt{color:var(--accent-teal);}
-  .terminal .comment{color:#9a927a;}
-  .cursor{
-    display:inline-block;
-    width:8px;height:15px;
-    background:var(--accent-amber);
-    margin-left:2px;
-    vertical-align:middle;
-    animation:blink 1.05s step-end infinite;
-  }
-  @keyframes blink{50%{opacity:0;}}
-
-  p{color:var(--ink-soft); margin:0 0 14px; max-width:64ch;}
-
-  .contact-links{
-    display:flex; flex-wrap:wrap; gap:10px 18px; margin-top:18px;
-    font-family:'IBM Plex Mono', monospace; font-size:13px;
-  }
-  .contact-links a{
-    text-decoration:none;
-    color:var(--ink);
-    border-bottom:1px solid var(--accent-amber);
-    padding-bottom:1px;
-  }
-  .contact-links a:hover{color:var(--accent-teal); border-color:var(--accent-teal);}
-
-  /* code-line layout with gutter */
-  .code-block{
-    display:grid;
-    grid-template-columns:34px 1fr;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13.5px;
-    margin-top:16px;
-    border:1px solid #ddd5bf;
-    border-radius:var(--radius);
-    overflow:hidden;
-  }
-  .gutter{
-    background:var(--panel-cream-2);
-    color:#b6ac8e;
-    text-align:right;
-    padding:14px 8px;
-    user-select:none;
-    border-right:1px solid #ddd5bf;
-  }
-  .gutter div{height:26px; line-height:26px;}
-  .code-content{
-    padding:14px 18px;
-    background:#faf7ef;
-  }
-  .code-content .ln{height:26px; line-height:26px; white-space:nowrap; overflow-x:auto;}
-  .kw{color:#a34b6b;}
-  .str{color:var(--accent-teal);}
-  .key{color:#8a6a1f;}
-  .num{color:#3e7d6b;}
-  .punc{color:#8b8474;}
-
-  .edu-card{
-    background:#faf7ef;
-    border:1px solid #ddd5bf;
-    border-radius:var(--radius);
-    padding:18px 20px;
-    margin-bottom:14px;
-  }
-  .edu-card .school{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:17px;
-    color:var(--ink);
-  }
-  .edu-card .meta{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12.5px;
-    color:var(--ink-soft);
-    margin-top:5px;
-  }
-
-  .tag-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
-  .tag{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    padding:5px 10px;
-    border:1px solid #cfc7b2;
-    border-radius:20px;
-    color:var(--ink-soft);
-    background:#faf7ef;
-  }
-
-  .log-line{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13.5px;
-    padding:10px 0;
-    border-bottom:1px solid #e3dcc7;
-    color:var(--ink);
-    display:flex;
-    gap:12px;
-  }
-  .log-line:last-child{border-bottom:none;}
-  .log-line .tag-ok{color:var(--accent-teal); flex-shrink:0;}
-
-  .stat-row{
-    display:flex; gap:32px; margin-top:18px; flex-wrap:wrap;
-  }
-  .stat{
-    font-family:'IBM Plex Mono', monospace;
-  }
-  .stat .num-big{
-    font-family:'Fraunces', serif;
-    font-size:30px;
-    color:var(--ink);
-    font-weight:600;
-  }
-  .stat .num-label{font-size:11.5px; color:var(--ink-soft); margin-top:3px;}
-
-  footer{
-    padding:40px 60px 60px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--ink-soft);
-  }
-
-  /* fade in on scroll */
-  .reveal{
-    opacity:0;
-    transform:translateY(14px);
-    transition:opacity 0.6s ease, transform 0.6s ease;
-  }
-  .reveal.in{opacity:1; transform:translateY(0);}
-
-  /* focus visibility */
-  a:focus-visible, .file-item:focus-visible{
-    outline:2px solid var(--accent-amber);
-    outline-offset:2px;
-  }
-
-  @media (max-width: 880px){
-    .sidebar{display:none;}
-    .mobile-tabs{display:block;}
-    section{padding:46px 22px;}
-    .code-block{grid-template-columns:28px 1fr;}
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1110">
+  <meta name="description" content="Tarun Pratap Singh — Computer Science undergraduate at MNNIT Prayagraj. Projects, skills, coding profile, and achievements.">
+  <title>Tarun Pratap Singh | Portfolio</title>
+  <style>
+    :root {
+      --bg: #0b1110; --panel: #101917; --panel-2: #131e1b; --line: #263b33;
+      --text: #dce8e1; --muted: #8da59a; --green: #8ee6a5; --amber: #e8c879;
+      --blue: #8dc8e8; --red: #e58e8e; --mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--mono); line-height: 1.65; }
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+    .topbar { position: sticky; top: 0; z-index: 10; background: rgba(11,17,16,.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .topbar-inner { max-width: 1180px; margin: auto; padding: 12px 22px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .brand { color: var(--text); font-weight: 700; white-space: nowrap; }
+    .brand span { color: var(--green); }
+    .nav { display: flex; gap: 18px; flex-wrap: wrap; justify-content: flex-end; font-size: .82rem; }
+    .nav a { color: var(--muted); }
+    .nav a:hover { color: var(--green); }
+    .shell { max-width: 1180px; margin: 26px auto; padding: 0 22px; display: grid; grid-template-columns: 245px minmax(0, 1fr); gap: 18px; align-items: start; }
+    .sidebar, .main { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); }
+    .sidebar { position: sticky; top: 76px; }
+    .side-head { padding: 22px 18px 18px; border-bottom: 1px solid var(--line); }
+    .avatar { width: 48px; height: 48px; border: 1px solid #426451; border-radius: 10px; display: grid; place-items: center; color: var(--green); font-weight: 800; margin-bottom: 12px; background: #14221b; }
+    .name { font-weight: 700; line-height: 1.35; }
+    .role { color: var(--muted); font-size: .78rem; margin-top: 5px; }
+    .tree { padding: 14px 10px; }
+    .tree-root { padding: 6px 10px 12px; color: var(--muted); font-size: .78rem; }
+    .file-item { display: block; padding: 8px 10px; border-radius: 7px; color: var(--muted); font-size: .82rem; }
+    .file-item::before { content: "›"; color: var(--green); margin-right: 9px; }
+    .file-item:hover, .file-item.active { background: #182720; color: var(--text); text-decoration: none; }
+    .side-links { border-top: 1px solid var(--line); padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 12px; font-size: .78rem; }
+    .main { min-width: 0; }
+    .tabbar { padding: 11px 18px; background: #0d1513; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .8rem; overflow-wrap: anywhere; }
+    .tabbar strong { color: var(--green); font-weight: 500; }
+    section { padding: 30px 34px; border-bottom: 1px solid var(--line); }
+    section:last-child { border-bottom: 0; }
+    .section-label { color: var(--muted); font-size: .78rem; margin-bottom: 8px; }
+    .section-label::before { content: "# "; color: var(--amber); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-family: var(--sans); font-size: clamp(2rem, 4vw, 3.15rem); line-height: 1.12; letter-spacing: -.045em; margin-bottom: 16px; }
+    h2 { font-family: var(--sans); font-size: 1.35rem; letter-spacing: -.02em; margin-bottom: 18px; }
+    h3 { font-size: 1rem; margin-bottom: 8px; color: var(--text); }
+    p { color: #b7c9bf; font-size: .91rem; }
+    .terminal { background: #0b1210; border: 1px solid var(--line); border-radius: 9px; padding: 16px 18px; margin: 18px 0; color: #c9dbd0; font-size: .86rem; overflow-wrap: anywhere; }
+    .prompt { color: var(--green); } .comment { color: var(--muted); }
+    .cursor { display: inline-block; width: 7px; height: 1em; background: var(--green); vertical-align: -2px; margin-left: 4px; animation: blink 1s steps(2,start) infinite; }
+    @keyframes blink { to { visibility: hidden; } }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .tag { border: 1px solid #2d493b; background: #14211a; color: #bde8c6; border-radius: 5px; padding: 4px 9px; font-size: .76rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 13px; border: 1px solid #426451; border-radius: 7px; color: var(--green); font-size: .82rem; background: #14221b; }
+    .button.primary { background: var(--green); color: #0b1710; border-color: var(--green); font-weight: 700; }
+    .button:hover { text-decoration: none; filter: brightness(1.08); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .card { border: 1px solid var(--line); background: var(--panel-2); border-radius: 9px; padding: 16px; min-width: 0; }
+    .meta { color: var(--muted); font-size: .8rem; }
+    .card p { margin-bottom: 10px; font-size: .85rem; }
+    .status { display: inline-block; font-size: .7rem; padding: 2px 7px; border: 1px solid #41644c; color: var(--green); border-radius: 4px; margin-bottom: 10px; }
+    .status.planned { border-color: #6b5d35; color: var(--amber); }
+    .code-block { border: 1px solid var(--line); border-radius: 8px; background: #0b1210; padding: 15px 16px; overflow-x: auto; font-size: .82rem; }
+    .code-line { white-space: nowrap; }
+    .kw { color: #8dc8e8; } .str { color: #a9d7a6; } .key { color: #e8c879; }
+    .edu-card { padding: 14px 15px; border-left: 2px solid #426451; background: var(--panel-2); margin-bottom: 10px; border-radius: 0 7px 7px 0; }
+    .edu-card:last-child { margin-bottom: 0; }
+    .school { font-weight: 700; font-size: .88rem; }
+    .log-line { padding: 8px 0; border-bottom: 1px dashed #2a3c33; font-size: .88rem; }
+    .log-line:last-child { border-bottom: 0; }
+    .tag-ok { color: var(--green); margin-right: 8px; }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .contact-links a { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; font-size: .8rem; overflow-wrap: anywhere; }
+    footer { color: var(--muted); font-size: .75rem; padding: 18px 30px; text-align: right; }
+    @media (max-width: 850px) {
+      .shell { grid-template-columns: 1fr; margin-top: 14px; }
+      .sidebar { display: none; }
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .nav { justify-content: flex-start; gap: 8px 14px; }
+      section { padding: 24px 22px; }
+    }
+    @media (max-width: 560px) {
+      .shell { padding: 0 10px; }
+      .topbar-inner { padding: 11px 14px; }
+      .grid { grid-template-columns: 1fr; }
+      section { padding: 22px 16px; }
+      .tabbar { padding: 10px 13px; }
+      .contact-links { flex-direction: column; align-items: stretch; }
+      .contact-links a { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .cursor { animation: none; }
+    }
+  </style>
 </head>
 <body>
-
-<div class="mobile-tabs" id="mobileTabs">
-  <a href="#about" data-target="about">about.md</a>
-  <a href="#education" data-target="education">education.json</a>
-  <a href="#skills" data-target="skills">skills.py</a>
-  <a href="#coding" data-target="coding">coding_profile.md</a>
-  <a href="#achievements" data-target="achievements">achievements.log</a>
-  <a href="#interests" data-target="interests">interests.txt</a>
-  <a href="#contact" data-target="contact">contact.sh</a>
-</div>
-
-<div class="shell">
-
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="avatar">TS</div>
-      <div class="name">Tarun Pratap Singh</div>
-      <div class="role">B.Tech CSE · MNNIT Prayagraj</div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#about"><span>~/</span> tarun-pratap-singh</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#about">about</a><a href="#education">education</a><a href="#skills">skills</a>
+        <a href="#projects">projects</a><a href="#coding">coding</a><a href="#experience">activities</a><a href="#contact">contact</a>
+      </nav>
     </div>
+  </header>
 
-    <nav class="tree" id="tree">
-      <div class="tree-root">tarun-pratap-singh/</div>
-      <a class="file-item" href="#about" data-target="about"><span class="dot"></span>about.md</a>
-      <a class="file-item" href="#education" data-target="education"><span class="dot"></span>education.json</a>
-      <a class="file-item" href="#skills" data-target="skills"><span class="dot"></span>skills.py</a>
-      <a class="file-item" href="#coding" data-target="coding"><span class="dot"></span>coding_profile.md</a>
-      <a class="file-item" href="#achievements" data-target="achievements"><span class="dot"></span>achievements.log</a>
-      <a class="file-item" href="#interests" data-target="interests"><span class="dot"></span>interests.txt</a>
-      <a class="file-item" href="#contact" data-target="contact"><span class="dot"></span>contact.sh</a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <a href="https://github.com/singh4567tarun-dot" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/tarun-pratapsingh-9bbb22370" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://leetcode.com/u/singh_tarun4567/" target="_blank" rel="noopener">LeetCode</a>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="tabbar">tarun-pratap-singh / <span class="crumb-active" id="crumbActive">&nbsp;about.md</span></div>
-
-    <section id="about">
-      <div class="section-label">about.md</div>
-      <h1 class="hero-name">Tarun Pratap Singh</h1>
-      <div class="terminal">
-        <span class="prompt">$</span> whoami<br>
-        Computer Science undergraduate, MNNIT Prayagraj<span class="cursor"></span><br><br>
-        <span class="comment"># mission</span><br>
-        Learning in public. Solving problems one array at a time.
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="side-head">
+        <div class="avatar" aria-hidden="true">TS</div>
+        <div class="name">Tarun Pratap Singh</div>
+        <div class="role">B.Tech CSE · MNNIT Prayagraj</div>
       </div>
-      <p class="reveal">Motivated Computer Science undergraduate seeking opportunities to strengthen software development and problem-solving skills through mentorship. Passionate about learning, building impactful solutions, and continuously improving in Data Structures &amp; Algorithms and Full-Stack Development while contributing effectively to collaborative technical environments.</p>
-      <div class="tag-row reveal">
-        <span class="tag">Software Development</span>
-        <span class="tag">Full-Stack Web Dev</span>
-        <span class="tag">Backend Development</span>
-        <span class="tag">Artificial Intelligence</span>
-        <span class="tag">Data Structures &amp; Algorithms</span>
+      <nav class="tree" aria-label="Portfolio sections">
+        <div class="tree-root">tarun-pratap-singh/</div>
+        <a class="file-item active" href="#about" data-target="about">about.md</a>
+        <a class="file-item" href="#education" data-target="education">education.json</a>
+        <a class="file-item" href="#skills" data-target="skills">skills.py</a>
+        <a class="file-item" href="#projects" data-target="projects">projects.md</a>
+        <a class="file-item" href="#coding" data-target="coding">coding_profile.md</a>
+        <a class="file-item" href="#achievements" data-target="achievements">achievements.log</a>
+        <a class="file-item" href="#experience" data-target="experience">activities.md</a>
+        <a class="file-item" href="#interests" data-target="interests">interests.txt</a>
+        <a class="file-item" href="#profiles" data-target="profiles">profiles.txt</a>
+      </nav>
+      <div class="side-links">
+        <a href="https://github.com/singh4567tarun-dot" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a href="https://www.linkedin.com/in/tarun-pratap-singh-9bbb22370/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+        <a href="https://leetcode.com/u/singh_tarun4567/" target="_blank" rel="noopener noreferrer">LeetCode ↗</a>
       </div>
-    </section>
+    </aside>
 
-    <section id="education">
-      <div class="section-label">education.json</div>
-      <h2 class="section-title">Education</h2>
+    <main class="main">
+      <div class="tabbar">tarun-pratap-singh / <strong id="crumbActive">about.md</strong></div>
 
-      <div class="edu-card reveal">
-        <div class="school">Motilal Nehru National Institute of Technology (MNNIT), Prayagraj</div>
-        <div class="meta">B.Tech · Computer Science &amp; Engineering &nbsp;·&nbsp; CPI 7.25 &nbsp;·&nbsp; Expected 2029</div>
-      </div>
-      <div class="edu-card reveal">
-        <div class="school">St. Paul's Senior Secondary School (CBSE)</div>
-        <div class="meta">Class X &nbsp;·&nbsp; 96%</div>
-      </div>
-      <div class="edu-card reveal">
-        <div class="school">Children's Academy School (CBSE)</div>
-        <div class="meta">Class XII &nbsp;·&nbsp; 87%</div>
-      </div>
-    </section>
-
-    <section id="skills">
-      <div class="section-label">skills.py</div>
-      <h2 class="section-title">Technical Skills</h2>
-      <div class="code-block reveal">
-        <div class="gutter"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div></div>
-        <div class="code-content">
-          <div class="ln"><span class="kw">languages</span> <span class="punc">=</span> [<span class="str">"C"</span>, <span class="str">"C++"</span>, <span class="str">"Python"</span>, <span class="str">"HTML"</span>, <span class="str">"CSS"</span>]</div>
-          <div class="ln"><span class="kw">core_areas</span> <span class="punc">=</span> [<span class="str">"Data Structures &amp; Algorithms"</span>, <span class="str">"Problem Solving"</span>,</div>
-          <div class="ln">&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"OOP Basics"</span>]</div>
-          <div class="ln"><span class="kw">tools</span> <span class="punc">=</span> [<span class="str">"GitHub"</span>, <span class="str">"VS Code"</span>]</div>
-          <div class="ln"></div>
-          <div class="ln"><span class="kw">def</span> <span class="key">currently_learning</span>():</div>
-          <div class="ln">&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="str">"full-stack development, one project at a time"</span></div>
+      <section id="about">
+        <div class="section-label">about.md</div>
+        <h1>Tarun Pratap Singh</h1>
+        <div class="terminal">
+          <span class="prompt">$</span> whoami<br>
+          Computer Science &amp; Engineering undergraduate, MNNIT Prayagraj<span class="cursor" aria-hidden="true"></span><br><br>
+          <span class="comment"># mission</span><br>
+          Learning by building, solving problems, and sharing my progress.
         </div>
-      </div>
-    </section>
-
-    <section id="coding">
-      <div class="section-label">coding_profile.md</div>
-      <h2 class="section-title">Coding Profile</h2>
-      <p>Building a strong foundation in arrays, binary search, and core problem-solving techniques — with algorithmic thinking sharpened through consistent daily practice.</p>
-      <div class="stat-row reveal">
-        <div class="stat">
-          <div class="num-big">60+</div>
-          <div class="num-label">DSA problems solved<br>on LeetCode</div>
+        <p>I’m a Computer Science undergraduate interested in software development, problem solving, and building practical tools. I’m strengthening my foundations in Data Structures &amp; Algorithms while developing my Python and web skills through hands-on projects.</p>
+        <div class="tag-row">
+          <span class="tag">Software Development</span><span class="tag">Data Structures &amp; Algorithms</span>
+          <span class="tag">Python Projects</span><span class="tag">Web Development</span>
         </div>
-      </div>
-      <div class="tag-row reveal" style="margin-top:22px;">
-        <span class="tag">Arrays</span>
-        <span class="tag">Binary Search</span>
-        <span class="tag">Problem Solving</span>
-      </div>
-    </section>
+        <div class="actions">
+          <a class="button primary" href="resume.pdf" target="_blank" rel="noopener">View Resume ↗</a>
+          <a class="button" href="#projects">Explore Projects ↓</a>
+        </div>
+      </section>
 
-    <section id="achievements">
-      <div class="section-label">achievements.log</div>
-      <h2 class="section-title">Achievements</h2>
-      <div class="reveal">
+      <section id="education">
+        <div class="section-label">education.json</div>
+        <h2>Education</h2>
+        <div class="edu-card">
+          <div class="school">Motilal Nehru National Institute of Technology (MNNIT), Prayagraj</div>
+          <div class="meta">B.Tech · Computer Science &amp; Engineering · Current CPI: 7.25 · Expected 2029</div>
+        </div>
+        <div class="edu-card">
+          <div class="school">Children's Academy School (CBSE)</div>
+          <div class="meta">Class XII · 87%</div>
+        </div>
+        <div class="edu-card">
+          <div class="school">St. Paul's Senior Secondary School (CBSE)</div>
+          <div class="meta">Class X · 96%</div>
+        </div>
+      </section>
+
+      <section id="skills">
+        <div class="section-label">skills.py</div>
+        <h2>Technical Skills</h2>
+        <div class="code-block" role="region" aria-label="Technical skills code-style listing">
+          <div class="code-line"><span class="kw">languages</span> = [<span class="str">"C"</span>, <span class="str">"C++"</span>, <span class="str">"Python"</span>]</div>
+          <div class="code-line"><span class="kw">web</span> = [<span class="str">"HTML"</span>, <span class="str">"CSS"</span>]</div>
+          <div class="code-line"><span class="kw">tools</span> = [<span class="str">"Git"</span>, <span class="str">"GitHub"</span>, <span class="str">"VS Code"</span>]</div>
+          <div class="code-line"><span class="kw">core_areas</span> = [<span class="str">"Data Structures &amp; Algorithms"</span>, <span class="str">"Problem Solving"</span>, <span class="str">"OOP basics"</span>]</div>
+          <div class="code-line"><span class="kw">currently_building</span> = <span class="str">"JARVIS — Eye of Agamotto"</span></div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <div class="section-label">projects.md</div>
+        <h2>Projects</h2>
+        <div class="card">
+          <span class="status">In progress</span>
+          <h3>JARVIS — Eye of Agamotto</h3>
+          <div class="meta">Python · PySide6 · psutil · pyqtgraph (planned)</div>
+          <p>A desktop resource-monitoring application designed to display system performance metrics through a Qt-based interface.</p>
+          <h3>Implemented so far</h3>
+          <ul>
+            <li><p>Built the initial PySide6/Qt dashboard structure.</p></li>
+            <li><p>Added system metric collection for CPU, RAM, and disk usage using <code>psutil</code>.</p></li>
+            <li><p>Organized metric readings and recent history for use by the interface.</p></li>
+          </ul>
+          <h3>Planned next</h3>
+          <ul>
+            <li><p>Live time-series charts using pyqtgraph.</p></li>
+            <li><p>Periodic dashboard refresh and clearer historical metric visualization.</p></li>
+            <li><p>Resource threshold indicators or alerts.</p></li>
+          </ul>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/singh4567tarun-dot/JARVIS" target="_blank" rel="noopener noreferrer">View Source on GitHub ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="coding">
+        <div class="section-label">coding_profile.md</div>
+        <h2>Coding Profile</h2>
+        <p>Practising Data Structures &amp; Algorithms and improving problem-solving through consistent coding.</p>
+        <div class="grid">
+          <div class="card">
+            <div class="meta">LEETCODE</div>
+            <div style="font-size:2rem;color:var(--green);font-weight:700;line-height:1.25">150+</div>
+            <div class="meta">DSA problems solved</div>
+            <div class="actions"><a class="button" href="https://leetcode.com/u/singh_tarun4567/" target="_blank" rel="noopener noreferrer">Open Profile ↗</a></div>
+          </div>
+          <div class="card">
+            <div class="meta">GITHUB</div>
+            <h3>Learning in public</h3>
+            <p>Project source code and ongoing work.</p>
+            <div class="actions"><a class="button" href="https://github.com/singh4567tarun-dot" target="_blank" rel="noopener noreferrer">Open GitHub ↗</a></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="achievements">
+        <div class="section-label">achievements.log</div>
+        <h2>Achievements</h2>
         <div class="log-line"><span class="tag-ok">[PASS]</span> JEE Advanced — AIR 12665</div>
         <div class="log-line"><span class="tag-ok">[PASS]</span> JEE Main — AIR 6373</div>
-      </div>
-    </section>
+      </section>
 
-    <section id="interests">
-      <div class="section-label">interests.txt</div>
-      <h2 class="section-title">Beyond the Editor</h2>
-      <div class="tag-row reveal">
-        <span class="tag">Photography</span>
-        <span class="tag">Graphic Design</span>
-        <span class="tag">Gym Training</span>
-        <span class="tag">Running</span>
-      </div>
-    </section>
+      <section id="experience">
+        <div class="section-label">activities.md</div>
+        <h2>Experience &amp; Activities</h2>
+        <div class="card">
+          <h3>Coding Club — Design Team</h3>
+          <div class="meta">MNNIT Prayagraj</div>
+          <p>Part of the Coding Club's Design Team, contributing creative and visual-design skills to the technical community.</p>
+        </div>
+      </section>
 
-    <section id="contact">
-      <div class="section-label">contact.sh</div>
-      <h2 class="section-title">Get In Touch</h2>
-      <div class="terminal">
-        <span class="prompt">$</span> ./contact --send<br>
-        <span class="comment"># reaching out about internships, projects, or mentorship? open thread below.</span>
-      </div>
-      <div class="contact-links reveal">
-        <a href="mailto:singh4567tarun@gmail.com">singh4567tarun@gmail.com</a>
-        <a href="tel:+919760635796">+91 9760635796</a>
-        <a href="https://www.linkedin.com/in/tarun-pratapsingh-9bbb22370" target="_blank" rel="noopener">linkedin.com/in/tarun-pratapsingh</a>
-        <a href="https://github.com/singh4567tarun-dot" target="_blank" rel="noopener">github.com/singh4567tarun-dot</a>
-        <a href="https://leetcode.com/u/singh_tarun4567/" target="_blank" rel="noopener">leetcode.com/singh_tarun4567</a>
-      </div>
-    </section>
+      <section id="interests">
+        <div class="section-label">interests.txt</div>
+        <h2>Beyond the Editor</h2>
+        <div class="tag-row">
+          <span class="tag">Nature Photography</span><span class="tag">Graphic Design</span>
+          <span class="tag">Gym Training</span><span class="tag">Distance Running</span>
+        </div>
+      </section>
 
-    <footer>Mathura, Uttar Pradesh, India · built as a static portfolio</footer>
-  </main>
-</div>
-
-<script>
-  const fileItems = document.querySelectorAll('.file-item, .mobile-tabs a');
-  const sections = document.querySelectorAll('main section[id]');
-  const crumb = document.getElementById('crumbActive');
-  const fileNames = {
-    about:'about.md', education:'education.json', skills:'skills.py',
-    coding:'coding_profile.md', achievements:'achievements.log',
-    interests:'interests.txt', contact:'contact.sh'
-  };
-
-  function setActive(id){
-    fileItems.forEach(el=>{
-      el.classList.toggle('active', el.dataset.target === id);
-    });
-    if(crumb && fileNames[id]) crumb.textContent = '\u00A0' + fileNames[id];
-  }
-
-  const observer = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        setActive(entry.target.id);
-      }
-    });
-  }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
-
-  sections.forEach(sec => observer.observe(sec));
-
-  const revealObserver = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        entry.target.classList.add('in');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-  setActive('about');
-</script>
-
+      <section id="profiles">
+        <div class="section-label">profiles.txt</div>
+        <div class="contact-links">
+          <a href="tel:+919760635796">Phone: +91 97606 35796</a>
+          <a href="mailto:singh4567tarun@gmail.com">Email: singh4567tarun@gmail.com</a>
+          <a href="https://www.linkedin.com/in/tarun-pratap-singh-9bbb22370/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          <a href="https://github.com/singh4567tarun-dot" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a href="https://leetcode.com/u/singh_tarun4567/" target="_blank" rel="noopener noreferrer">LeetCode ↗</a>
+          <a href="https://singh4567tarun-dot.github.io/tarun-portfolio/" target="_blank" rel="noopener noreferrer">Portfolio ↗</a>
+          <a href="resume.pdf" target="_blank" rel="noopener">Resume PDF ↗</a>
+        </div>
+      </section>
+      <footer>Mathura, Uttar Pradesh, India</footer>
+    </main>
+  </div>
+  <script>
+    const navItems = document.querySelectorAll('.file-item');
+    const sections = document.querySelectorAll('main section[id]');
+    const crumb = document.getElementById('crumbActive');
+    const names = {
+      about: 'about.md', education: 'education.json', skills: 'skills.py',
+      projects: 'projects.md', coding: 'coding_profile.md', achievements: 'achievements.log',
+      experience: 'activities.md', interests: 'interests.txt', profiles: 'profiles.txt'
+    };
+    const activate = (id) => {
+      navItems.forEach(item => item.classList.toggle('active', item.dataset.target === id));
+      if (crumb && names[id]) crumb.textContent = names[id];
+    };
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => { if (entry.isIntersecting) activate(entry.target.id); });
+      }, { rootMargin: '-30% 0px -55% 0px', threshold: 0 });
+      sections.forEach(section => observer.observe(section));
+    }
+    navItems.forEach(item => item.addEventListener('click', () => activate(item.dataset.target)));
+  </script>
 </body>
 </html>
